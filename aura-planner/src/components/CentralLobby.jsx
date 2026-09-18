@@ -3,7 +3,7 @@ import { Zap, HeartHandshake, Clock, Calendar, ArrowLeft, Plus, Trash2, CheckCir
 import { differenceInCalendarDays, parseISO } from 'date-fns';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
-export default function CentralLobby({ onBackToHero }) {
+export default function CentralLobby({ onBackToHero, onNavigate }) {
   const [top3, setTop3] = useLocalStorage('aura_top3', [
     { text: '', done: false },
     { text: '', done: false },
@@ -64,7 +64,11 @@ export default function CentralLobby({ onBackToHero }) {
           <h1 className="text-xl font-bold tracking-wider">AURA PLANNER</h1>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => alert('Time Blocker coming next!')} className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5">
+          {/* Active Navigation to Time Blocker */}
+          <button 
+            onClick={() => onNavigate && onNavigate('blocker')} 
+            className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5 hover:bg-amber-500/20"
+          >
             <Zap className="w-3.5 h-3.5 text-amber-300" /> Blocker
           </button>
           <button onClick={() => alert('Timer coming next!')} className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5">
