@@ -1,0 +1,9 @@
+# Local Dependencies
+node_modules/
+
+# Auto-generated Vite build folder
+dist/
+
+# System & Local Configs
+.DS_Store
+*.local
