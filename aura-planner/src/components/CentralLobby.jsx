@@ -22,7 +22,6 @@ export default function CentralLobby({ onBackToHero, onNavigate }) {
   const [newDeadline, setNewDeadline] = useState({ title: '', dueDate: '', priority: 'Medium' });
   const [showAddDeadline, setShowAddDeadline] = useState(false);
 
-  // Calculate Priority Progress
   const completedCount = top3.filter(t => t.text.trim() !== '' && t.done).length;
   const activeTaskCount = top3.filter(t => t.text.trim() !== '').length;
 
@@ -55,7 +54,6 @@ export default function CentralLobby({ onBackToHero, onNavigate }) {
 
   return (
     <div className="w-full p-6 text-white max-w-6xl mx-auto space-y-6">
-      {/* Header */}
       <header className="glass-panel p-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <button onClick={onBackToHero} className="glass-button p-2 text-xs" title="Return to Hero">
@@ -64,7 +62,6 @@ export default function CentralLobby({ onBackToHero, onNavigate }) {
           <h1 className="text-xl font-bold tracking-wider">AURA PLANNER</h1>
         </div>
         <div className="flex gap-2">
-          {/* Active Navigation to Time Blocker */}
           <button 
             onClick={() => onNavigate && onNavigate('blocker')} 
             className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5 hover:bg-amber-500/20"
@@ -74,16 +71,16 @@ export default function CentralLobby({ onBackToHero, onNavigate }) {
           <button onClick={() => alert('Timer coming next!')} className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5 text-sky-300" /> Timer
           </button>
-          <button onClick={() => alert('Calendar coming next!')} className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5">
+          <button 
+            onClick={() => onNavigate && onNavigate('calendar')} 
+            className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5 hover:bg-emerald-500/20"
+          >
             <Calendar className="w-3.5 h-3.5 text-emerald-300" /> Calendar
           </button>
         </div>
       </header>
 
-      {/* Main Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        {/* Today's Top 3 Focus */}
         <div className="glass-panel p-6 space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -116,7 +113,6 @@ export default function CentralLobby({ onBackToHero, onNavigate }) {
           </div>
         </div>
 
-        {/* Habits & Rest */}
         <div className="glass-panel p-6 space-y-4">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <HeartHandshake className="w-5 h-5 text-emerald-300" /> 습관 & 휴식
@@ -151,7 +147,6 @@ export default function CentralLobby({ onBackToHero, onNavigate }) {
           </div>
         </div>
 
-        {/* Deadline Radar */}
         <div className="glass-panel p-6 space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold flex items-center gap-2">
