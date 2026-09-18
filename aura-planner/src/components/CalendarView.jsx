@@ -11,8 +11,7 @@ import {
   eachDayOfInterval, 
   isSameMonth, 
   isSameDay, 
-  isToday, 
-  parseISO 
+  isToday 
 } from 'date-fns';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
@@ -20,23 +19,19 @@ export default function CalendarView({ onBackToLobby }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   
-  // Shared with Central Lobby
   const [deadlines] = useLocalStorage('aura_deadlines', []);
-  // Calendar specific notes/events
   const [events, setEvents] = useLocalStorage('aura_calendar_events', {});
   
   const [newEventText, setNewEventText] = useState('');
-  const [eventType, setEventType] = useState('exam'); // 'exam', 'assignment', 'rest'
+  const [eventType, setEventType] = useState('exam');
 
   const dateKey = format(selectedDate, 'yyyy-MM-dd');
   const dayEvents = events[dateKey] || [];
   const dayDeadlines = deadlines.filter(d => d.dueDate === dateKey);
 
-  // Month navigation
   const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
   const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
 
-  // Calendar Grid Math
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);
@@ -79,7 +74,6 @@ export default function CalendarView({ onBackToLobby }) {
 
   return (
     <div className="w-full p-6 text-white max-w-6xl mx-auto space-y-6">
-      {/* Header */}
       <header className="glass-panel p-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <button onClick={onBackToLobby} className="glass-button p-2 text-xs" title="Return to Lobby">
@@ -104,17 +98,12 @@ export default function CalendarView({ onBackToLobby }) {
         </div>
       </header>
 
-      {/* Main Grid + Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Calendar Grid (2 Cols on Large Screens) */}
         <div className="lg:col-span-2 glass-panel p-6 space-y-4">
-          {/* Weekday Labels */}
           <div className="grid grid-cols-7 text-center text-xs font-semibold text-white/50 border-b border-white/10 pb-2">
             <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
           </div>
 
-          {/* Days Grid */}
           <div className="grid grid-cols-7 gap-2">
             {calendarDays.map((day) => {
               const formattedDayKey = format(day, 'yyyy-MM-dd');
@@ -145,7 +134,6 @@ export default function CalendarView({ onBackToLobby }) {
                     {isCurrentDay && <span className="text-[9px] bg-amber-400/30 text-amber-200 px-1 rounded">TODAY</span>}
                   </div>
 
-                  {/* Visual Indicator Dots */}
                   {hasItems && isCurrentMonth && (
                     <div className="flex gap-1 flex-wrap mt-1">
                       {dayDeadlineCount > 0 && (
@@ -162,7 +150,6 @@ export default function CalendarView({ onBackToLobby }) {
           </div>
         </div>
 
-        {/* Selected Date Inspector / Entry Panel */}
         <div className="glass-panel p-6 space-y-4">
           <div className="border-b border-white/10 pb-3">
             <h2 className="text-lg font-bold text-amber-300">
@@ -171,7 +158,6 @@ export default function CalendarView({ onBackToLobby }) {
             <p className="text-xs text-white/60">Schedule & Deadlines</p>
           </div>
 
-          {/* Add Event Form */}
           <form onSubmit={addEvent} className="space-y-3">
             <input
               type="text"
@@ -196,9 +182,7 @@ export default function CalendarView({ onBackToLobby }) {
             </div>
           </form>
 
-          {/* Item Lists for Selected Date */}
           <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
-            {/* Synced Deadlines */}
             {dayDeadlines.map((d) => (
               <div key={d.id} className="glass-card p-3 border-l-4 border-l-rose-400 text-xs flex justify-between items-center">
                 <div>
@@ -208,7 +192,6 @@ export default function CalendarView({ onBackToLobby }) {
               </div>
             ))}
 
-            {/* Custom Events */}
             {dayEvents.map((e) => (
               <div key={e.id} className={`glass-card p-3 border border-white/10 text-xs flex justify-between items-center ${getTypeStyle(e.type)}`}>
                 <div className="flex items-center gap-2">
@@ -226,7 +209,6 @@ export default function CalendarView({ onBackToLobby }) {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );
