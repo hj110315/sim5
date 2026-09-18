@@ -2,7 +2,7 @@ name: Deploy Aura Planner
 
 on:
   push:
-    branches: [ main ] # Runs automatically whenever you commit changes to main
+    branches: [ main ]
 
 permissions:
   contents: read
@@ -19,6 +19,12 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
+    # Tell GitHub Actions which subfolder holds package.json
+    defaults:
+      run:
+        working-directory: ./aura-planner # Replace 'aura-planner' with your exact subfolder name!
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -37,7 +43,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: './aura-planner/dist' # Points to dist inside your subfolder
 
       - name: Deploy to GitHub Pages
         id: deployment
