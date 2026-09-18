@@ -68,7 +68,10 @@ export default function CentralLobby({ onBackToHero, onNavigate }) {
           >
             <Zap className="w-3.5 h-3.5 text-amber-300" /> Blocker
           </button>
-          <button onClick={() => alert('Timer coming next!')} className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5">
+          <button 
+            onClick={() => onNavigate && onNavigate('timer')} 
+            className="glass-button px-3 py-1.5 text-xs flex items-center gap-1.5 hover:bg-sky-500/20"
+          >
             <Clock className="w-3.5 h-3.5 text-sky-300" /> Timer
           </button>
           <button 
