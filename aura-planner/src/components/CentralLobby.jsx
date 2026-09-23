@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { differenceInCalendarDays, parseISO } from 'date-fns';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import AssignmentChunker from './AssignmentChunker';
+import AssignmentChunker from './components/AssignmentChunker';
 
 export default function CentralLobby({ onBackToHero, onNavigate, onToggleScratchpad }) {
   const [tasks, setTasks] = useLocalStorage('aura_tasks', [
