@@ -8,27 +8,43 @@
   }
 }
 
-/* Glassmorphism System with Dark Tint Reinforcement for Text Contrast */
+/* Circadian Glass Tinting Modes */
+.circadian-day {
+  --glass-bg: rgba(15, 23, 42, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --accent-glow: rgba(56, 189, 248, 0.15);
+}
+
+.circadian-sunset {
+  --glass-bg: rgba(28, 20, 32, 0.82);
+  --glass-border: rgba(251, 146, 60, 0.18);
+  --accent-glow: rgba(251, 146, 60, 0.2);
+}
+
+.circadian-night {
+  --glass-bg: rgba(10, 15, 26, 0.90);
+  --glass-border: rgba(251, 191, 36, 0.12);
+  --accent-glow: rgba(251, 191, 36, 0.15);
+}
+
+/* Glassmorphism System */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: var(--glass-bg, rgba(15, 23, 42, 0.75));
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.12));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border-radius: 1.25rem;
+  transition: background 0.8s ease, border-color 0.8s ease, backdrop-filter 0.5s ease;
 }
 
 .glass-card {
-  background: rgba(30, 41, 59, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(30, 41, 59, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0.875rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(30, 41, 59, 0.65);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -48,11 +64,23 @@
   transform: translateY(-1px);
 }
 
-.glass-button:active {
-  transform: translateY(0);
+/* Contextual Glass Haze Shifts */
+.haze-lobby {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
-/* Enhanced Input Field Styling & State Fixes */
+.haze-focus {
+  backdrop-filter: blur(40px) brightness(0.7);
+  -webkit-backdrop-filter: blur(40px) brightness(0.7);
+}
+
+.haze-rest {
+  backdrop-filter: blur(25px) sepia(0.15) hue-rotate(140deg);
+  -webkit-backdrop-filter: blur(25px) sepia(0.15) hue-rotate(140deg);
+}
+
+/* Input Styles */
 .glass-input {
   background: rgba(15, 23, 42, 0.65);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -83,12 +111,6 @@ select:-webkit-autofill {
   -webkit-text-fill-color: #f8fafc !important;
   -webkit-box-shadow: 0 0 0px 1000px #0f172a inset !important;
   transition: background-color 5000s ease-in-out 0s;
-}
-
-/* Native Calendar & Dropdown Picker Polish */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.8) sepia(1) saturate(3) hue-rotate(180deg);
-  cursor: pointer;
 }
 
 /* Custom Glass Scrollbar */
