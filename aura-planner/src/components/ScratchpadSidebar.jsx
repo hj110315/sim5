@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Brain, X, Plus, Trash2, ChevronRight, Check } from 'lucide-react';
+import { Brain, X, Plus, Trash2, Check } from 'lucide-react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function ScratchpadSidebar({ isOpen, onClose }) {
@@ -21,12 +21,19 @@ export default function ScratchpadSidebar({ isOpen, onClose }) {
   const addThought = (e) => {
     e.preventDefault();
     if (!inputVal.trim()) return;
-    setThoughts([{ id: Date.now(), text: inputVal.trim(), timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }, ...thoughts]);
+    setThoughts([
+      {
+        id: Date.now(),
+        text: inputVal.trim(),
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      },
+      ...thoughts
+    ]);
     setInputVal('');
   };
 
   const removeThought = (id) => {
-    setThoughts(thoughts.filter(t => t.id !== id));
+    setThoughts(thoughts.filter((t) => t.id !== id));
   };
 
   const clearAll = () => {
@@ -34,7 +41,7 @@ export default function ScratchpadSidebar({ isOpen, onClose }) {
   };
 
   return (
-    <div 
+    <div
       className={`fixed top-0 right-0 h-full w-80 sm:w-96 z-50 glass-panel haze-lobby border-l border-white/20 p-5 flex flex-col justify-between shadow-2xl transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
@@ -89,13 +96,16 @@ export default function ScratchpadSidebar({ isOpen, onClose }) {
             </div>
           ) : (
             thoughts.map((t) => (
-              <div key={t.id} className="glass-card p-3 text-xs flex justify-between items-start gap-2 border-l-2 border-l-amber-400/60">
+              <div
+                key={t.id}
+                className="glass-card p-3 text-xs flex justify-between items-start gap-2 border-l-2 border-l-amber-400/60"
+              >
                 <div className="flex-1 space-y-1">
                   <p className="text-slate-200 break-words font-medium">{t.text}</p>
                   <span className="text-[9px] font-mono text-slate-500">{t.timestamp}</span>
                 </div>
-                <button 
-                  onClick={() => removeThought(t.id)} 
+                <button
+                  onClick={() => removeThought(t.id)}
                   className="text-slate-500 hover:text-rose-400 p-0.5 transition-colors"
                   title="Dismiss thought"
                 >
@@ -111,8 +121,8 @@ export default function ScratchpadSidebar({ isOpen, onClose }) {
       {thoughts.length > 0 && (
         <div className="pt-3 border-t border-white/10 flex justify-between items-center">
           <span className="text-[10px] text-slate-400 font-mono">{thoughts.length} logged items</span>
-          <button 
-            onClick={clearAll} 
+          <button
+            onClick={clearAll}
             className="text-[10px] text-rose-300 hover:underline flex items-center gap-1 font-mono"
           >
             <Trash2 className="w-3 h-3" /> Clear Dump
