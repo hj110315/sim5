@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Sun, Moon, Sparkles, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Sun, Moon, Sparkles, Trash2, Anchor, RefreshCw, X, HeartHandshake } from 'lucide-react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const CATEGORIES = [
   { id: 'study', label: 'Academic / Study', color: 'bg-amber-500/20 border-amber-400/40 text-amber-200' },
-  { id: 'rest', label: 'Guilt-Free Rest', color: 'bg-emerald-500/20 border-emerald-400/40 text-emerald-200' },
+  { id: 'rest', label: 'Guilt-Free Rest Milestone', color: 'bg-emerald-500/20 border-emerald-400/40 text-emerald-200', isRest: true },
   { id: 'social', label: 'Social & Fun', color: 'bg-sky-500/20 border-sky-400/40 text-sky-200' },
   { id: 'routine', label: 'Routine / Meals', color: 'bg-purple-500/20 border-purple-400/40 text-purple-200' },
 ];
@@ -25,6 +25,7 @@ export default function TimeBlocker({ onBackToLobby }) {
   const [selectedCategory, setSelectedCategory] = useState('study');
   const [blockLabel, setBlockLabel] = useState('');
   const [blocks, setBlocks] = useLocalStorage('aura_time_blocks', {});
+  const [reanchorNotice, setReanchorNotice] = useState('');
 
   const todayKey = new Date().toISOString().split('T')[0];
   const todayBlocks = blocks[todayKey] || {};
@@ -39,17 +40,51 @@ export default function TimeBlocker({ onBackToLobby }) {
         title: blockLabel.trim() || catObj.label,
         category: selectedCategory,
         style: catObj.color,
+        isRest: catObj.isRest || false
       };
-      // Auto-flush custom label after tagging slot to prevent accidental spam
       setBlockLabel(''); 
     }
     setBlocks({ ...blocks, [todayKey]: updatedToday });
   };
 
-  const clearDaySchedule = () => {
-    const updated = { ...blocks };
-    delete updated[todayKey];
-    setBlocks(updated);
+  // 1-Click "Re-anchor Day" Algorithm
+  const handleReanchorDay = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMin = now.getMinutes() >= 30 ? '30' : '00';
+    const currentTimeSlot = `${String(currentHour).padStart(2, '0')}:${currentMin}`;
+
+    const updatedToday = { ...todayBlocks };
+    const orphanedTasks = [];
+
+    // Collect unfulfilled tasks from past time slots
+    TIME_SLOTS.forEach((slot) => {
+      if (slot < currentTimeSlot && updatedToday[slot]) {
+        orphanedTasks.push(updatedToday[slot]);
+        delete updatedToday[slot]; // Wipe past missed slots cleanly
+      }
+    });
+
+    // Re-assign orphaned tasks to upcoming available slots starting from current time
+    let availableSlotIndex = TIME_SLOTS.indexOf(currentTimeSlot);
+    let shiftedCount = 0;
+
+    orphanedTasks.forEach((task) => {
+      while (availableSlotIndex < TIME_SLOTS.length) {
+        const slotKey = TIME_SLOTS[availableSlotIndex];
+        if (!updatedToday[slotKey]) {
+          updatedToday[slotKey] = task;
+          shiftedCount++;
+          availableSlotIndex++;
+          break;
+        }
+        availableSlotIndex++;
+      }
+    });
+
+    setBlocks({ ...blocks, [todayKey]: updatedToday });
+    setReanchorNotice(`Day Re-anchored: Cleared past slots and pushed ${shiftedCount} remaining task(s) forward.`);
+    setTimeout(() => setReanchorNotice(''), 5000);
   };
 
   return (
@@ -61,13 +96,26 @@ export default function TimeBlocker({ onBackToLobby }) {
           </button>
           <div>
             <h1 className="text-lg font-bold tracking-wider text-slate-100">30-MIN TIME BLOCKER</h1>
-            <p className="text-xs text-slate-400">Map out focus and downtime with intention</p>
+            <p className="text-xs text-slate-400">Structure focus and claim guilt-free rest milestones</p>
           </div>
         </div>
-        <button onClick={clearDaySchedule} className="glass-button px-3.5 py-2 text-xs text-rose-300 flex items-center gap-1.5 hover:border-rose-400/40">
-          <Trash2 className="w-3.5 h-3.5" /> Clear Today
-        </button>
+
+        <div className="flex gap-2">
+          <button 
+            onClick={handleReanchorDay} 
+            className="glass-button px-3.5 py-2 text-xs text-amber-300 flex items-center gap-2 border-amber-400/40 hover:bg-amber-400/10"
+            title="Clean past missed slots and push items forward"
+          >
+            <Anchor className="w-3.5 h-3.5" /> 1-Click Re-anchor
+          </button>
+        </div>
       </header>
+
+      {reanchorNotice && (
+        <div className="glass-panel p-3 bg-amber-500/10 border-amber-400/40 text-xs text-amber-200 text-center font-medium animate-pulse">
+          {reanchorNotice}
+        </div>
+      )}
 
       <div className="glass-panel p-6 space-y-4">
         <div className="relative">
@@ -125,7 +173,8 @@ export default function TimeBlocker({ onBackToLobby }) {
                 }`}
               >
                 <span className="font-mono font-bold w-12 text-slate-300">{slot}</span>
-                <span className="flex-1 text-center font-medium truncate px-2 text-slate-200">
+                <span className="flex-1 text-center font-medium truncate px-2 text-slate-200 flex items-center justify-center gap-1.5">
+                  {activeData?.isRest && <HeartHandshake className="w-3.5 h-3.5 text-emerald-300" />}
                   {activeData ? activeData.title : '— Free Slot —'}
                 </span>
                 <Sparkles className={`w-3.5 h-3.5 ${activeData ? 'opacity-100' : 'opacity-0'}`} />
