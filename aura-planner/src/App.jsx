@@ -8,23 +8,23 @@ import FocusTimer from './components/FocusTimer';
 export default function App() {
   const [bgUrl, setBgUrl] = useState('');
   const [showCurtain, setShowCurtain] = useState(false);
-  const [activeView, setActiveView] = useState('lobby'); // 'lobby', 'blocker', 'calendar', 'timer'
+  const [activeView, setActiveView] = useState('lobby');
 
   const handleStartSession = () => {
     setShowCurtain(true);
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-slate-950 font-sans overflow-x-hidden">
-      {/* Background Layer */}
+    <div className="relative min-h-screen w-full bg-slate-950 text-slate-100 font-sans overflow-x-hidden selection:bg-amber-400/30 selection:text-amber-200">
+      {/* Background Image Layer with Preloaded Glass Shield */}
       <div 
         className="fixed inset-0 bg-cover bg-center transition-all duration-1000 transform scale-105"
-        style={{ backgroundImage: `url(${bgUrl})` }}
+        style={{ backgroundImage: bgUrl ? `url(${bgUrl})` : 'none' }}
       >
-        <div className="absolute inset-0 bg-slate-950/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-950/65 to-slate-950/85" />
       </div>
 
-      {/* Hero Landing */}
+      {/* Hero Landing Layer */}
       <div className="relative z-10">
         <HeroLanding 
           onStart={handleStartSession} 
@@ -34,15 +34,15 @@ export default function App() {
         />
       </div>
 
-      {/* Glass Curtain Workspace Overlay */}
+      {/* Workspace Glass Curtain Overlay */}
       <div 
-        className={`fixed inset-0 z-20 backdrop-blur-xl bg-slate-950/60 transition-all duration-700 ease-in-out flex items-center justify-center ${
+        className={`fixed inset-0 z-20 backdrop-blur-2xl bg-slate-950/70 transition-all duration-700 ease-in-out flex items-center justify-center ${
           showCurtain 
             ? 'opacity-100 pointer-events-auto translate-y-0' 
             : 'opacity-0 pointer-events-none translate-y-8'
         }`}
       >
-        <div className="w-full max-h-screen overflow-y-auto">
+        <div className="w-full max-h-screen overflow-y-auto py-8">
           {activeView === 'lobby' ? (
             <CentralLobby 
               onBackToHero={() => setShowCurtain(false)} 
